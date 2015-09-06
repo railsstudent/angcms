@@ -10,8 +10,9 @@ var users = require('./routes/users');
 
 var app = express();
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:angcms');
+mongoose.connect('mongodb://localhost:27017/angcms');
 var db = mongoose.connection;
+var api = require('./routes/api');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -27,6 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('/api', api);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
