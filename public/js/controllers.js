@@ -18,4 +18,23 @@ angular.module('myApp.controllers', [])
   			pagesFactory.deletePage(id);
   		};
 
+  }])
+  .controller('AdminLoginCtrl' ['$scope', '$location', '$cookies', 'AuthService', '$log',
+    function($scope, $location, $cookies, AuthService, $log) {
+
+      $scope.credentials = {
+        username : '',
+        password: ''
+      }
+
+      $scope.login = function _login(credentials) {
+        AuthService.login(credentials).then(
+          function(res, err) {
+            $cookies.loggedInUser = res.data;
+            $location.path('/admin/pages');
+          },
+          function(err) {
+            $log.log(err);
+          });
+      };
   }]);

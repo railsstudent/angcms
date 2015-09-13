@@ -34,4 +34,15 @@ angular.module('myApp.services', []).
   		}
 
   	};
+  }])
+  .factory('AuthService', ['$http', function($http) {
+    return {
+      login : function _login() {
+        return $http.post('/api/login', credentials);
+      },
+
+      logout : function _logout() {
+        return $http.get('/api/logout');
+      }
+    };
   }]);
