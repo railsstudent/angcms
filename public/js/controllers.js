@@ -8,6 +8,7 @@ angular.module('myApp.controllers', [])
   		pagesFactory.getPages().then(
   			function(response) {
   				$scope.allPages = response.data;
+          $log.log(response.data);
   			}, 
   			function(err) {	
   				$log.error(err);

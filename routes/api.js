@@ -4,6 +4,17 @@ var mongoose = require('mongoose');
 
 var Page = require('../models/page.js');
 var adminUser = require('../models/admin-user.js');
+var bcrypt = require('bcrypt-nodejs');
+
+function sessionCheck(request,response,next){
+
+    if (request.session.user) {
+	 	next();
+	}
+    else { 
+    	response.status(401).send('Authorization failed');
+    }
+}
 
 /* User Routes. */
 router.get('/', function(req, res) {
@@ -23,7 +34,7 @@ router.get('/pages', function(request, response) {
 });
 
 // create post
-router.post('/pages/add', function(request, response) {
+router.post('/pages/add', sessionCheck, function(request, response) {
 	var page = new Page({
 		title: request.body.title,
 		url: request.body.url,
@@ -42,7 +53,7 @@ router.post('/pages/add', function(request, response) {
 });
 
 // update post. I will use put instead
-router.post('/pages/update', function (request, response) {
+router.post('/pages/update', sessionCheck, function (request, response) {
 	var id = request.body._id;
 
 	Page.update({
@@ -60,7 +71,7 @@ router.post('/pages/update', function (request, response) {
 });
 
 // delete post
-router.delete('/pages/:id', function(request, response) {
+router.delete('/pages/:id', sessionCheck, function(request, response) {
 	var id = request.params.id;
 	Page.remove({
 		_id: id
@@ -95,6 +106,57 @@ router.get('/pages/details/:url', function(request, response) {
 		} else {
 			response.send(page);
 		}
+	});
+});
+
+// admin user api
+router.post('/add-user', function(request, response) {
+    var salt, hash, password;
+    password = request.body.password;
+    salt = bcrypt.genSaltSync(10);
+    hash = bcrypt.hashSync(password, salt);
+
+    var AdminUser = new adminUser({
+        username: request.body.username,
+        password: hash
+    });
+    AdminUser.save(function(err) {
+        if (!err) {
+            return response.send('Admin User successfully created');
+
+        } else {
+            return response.send(err);
+        }
+    });
+});
+
+router.post('/login', function(request, response) {
+	var username = request.body.username;
+	var password = request.body.password;
+
+	adminUser.findOne({
+		username : username
+	}, function(err, data) {
+		if (err | data === null) {
+			return response.status(401).send("User does not exist!!!!");
+		} else {
+			var usr = data;
+			if (username == usr.username && bcrypt.compareSync(password, usr.password)) {
+				request.session.regenerate(function() {
+					request.session.user = username;
+					return response.send(username);
+				});
+			} else {
+				return response.status(401).send("Bad Username or Password");
+			}
+		}
+	});
+});
+
+router.get('/logout', function(request, response) {
+	// destroy session
+	request.session.destroy(function() {
+		return response.status(401).send("User logged out!!!");
 	});
 });
 
