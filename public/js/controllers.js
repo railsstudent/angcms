@@ -19,7 +19,8 @@ angular.module('myApp.controllers', [])
   		};
 
   }])
-  .controller('AdminLoginCtrl' ['$scope', '$location', '$cookies', 'AuthService', '$log',
+  .controller('AdminLoginCtrl', ['$scope', '$location', '$cookies', 
+      'AuthService', '$log',
     function($scope, $location, $cookies, AuthService, $log) {
 
       $scope.credentials = {

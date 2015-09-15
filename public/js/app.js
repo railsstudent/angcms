@@ -25,7 +25,7 @@ config(['$routeProvider',  '$locationProvider', function($routeProvider, $locati
         controller: 'AddEditPageCtrl'
     });
     $routeProvider.otherwise({
-        redirectTo: '/admin/pages'
+        redirectTo: '/admin/login'
     });
   	$locationProvider.html5Mode(true);
 }]);
