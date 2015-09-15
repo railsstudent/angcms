@@ -8,7 +8,8 @@ angular.module('myApp', [
   'myApp.filters',
   'myApp.services',
   'myApp.directives',
-  'myApp.controllers'
+  'myApp.controllers',
+  'message.flash'
 ]).
 config(['$routeProvider',  '$locationProvider', function($routeProvider, $locationProvider) {
 

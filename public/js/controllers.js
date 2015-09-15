@@ -20,8 +20,8 @@ angular.module('myApp.controllers', [])
 
   }])
   .controller('AdminLoginCtrl', ['$scope', '$location', '$cookies', 
-      'AuthService', '$log',
-    function($scope, $location, $cookies, AuthService, $log) {
+      'AuthService', '$log', 'flashMessageService',
+    function($scope, $location, $cookies, AuthService, $log, flashMessageService) {
 
       $scope.credentials = {
         username : '',
